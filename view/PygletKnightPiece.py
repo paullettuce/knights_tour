@@ -44,15 +44,11 @@ class PygletSprite:
     def draw(self):
         self.sprite.draw()
 
-    def update(self, x, y, align_to_square_center=False):
+    def update(self, x, y):
         image_width = self.sprite.width
         image_height = self.sprite.height
-        if align_to_square_center:
-            self.x = self._calculate_center_of_square(x, image_width)
-            self.y = self._calculate_center_of_square(y, image_height)
-        else:
-            self.x = x - image_width // 2
-            self.y = y - image_height // 2
+        self.x = self._calculate_center_of_square(x, image_width)
+        self.y = self._calculate_center_of_square(y, image_height)
         self.sprite.update(self.x, self.y)
 
     def _create_and_scale_sprite(self, resource_name, scaling_to_square_size):

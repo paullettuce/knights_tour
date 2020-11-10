@@ -23,7 +23,7 @@ class ChessmanPainter:
 
     def update_floating_sprite(self, x, y):
         if self._floating_sprite:
-            self._floating_sprite.update(x, y, True)
+            self._floating_sprite.update(x, y)
 
     def is_knight_locked(self) -> bool:
         return self._knight
