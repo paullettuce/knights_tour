@@ -1,4 +1,4 @@
-from constants import VISITED_SQUARE_COLOR
+from constants import VISITED_SQUARE_COLOR, INVALID_SQUARE_COLOR
 from model.ChessBoardPosition import ChessBoardPosition
 from view.BoardSquare import BoardSquare
 
@@ -27,7 +27,12 @@ class BoardPainter:
         square = self._find_square(position)
         square.reset_color()
 
+    def mark_as_invalid(self, position):
+        square = self._find_square(position)
+        square.set_color(INVALID_SQUARE_COLOR)
+
     def _find_square(self, position: ChessBoardPosition) -> BoardSquare:
         dummy_square = BoardSquare(position.h_index, position.v_index)
         i = self.board_squares.index(dummy_square)
         return self.board_squares[i]
+

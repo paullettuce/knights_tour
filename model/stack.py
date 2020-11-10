@@ -36,3 +36,6 @@ class Stack:
 
     def is_full(self):
         return self.size() == self.max_size
+
+    def clear(self):
+        self.items.clear()

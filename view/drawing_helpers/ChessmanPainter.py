@@ -34,8 +34,10 @@ class ChessmanPainter:
         self.delete_floating_sprite()
         self._on_knight_locked(position.h_index, position.v_index)
 
-    def unlock_knight(self):
+    def unlock_knight(self) -> ChessBoardPosition:
+        position = self._knight.position()
         self._knight = None
+        return position
 
     def move_knight(self, position):
         self._knight.update(position.h_index, position.v_index)

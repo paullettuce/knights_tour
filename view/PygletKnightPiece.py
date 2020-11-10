@@ -2,6 +2,7 @@ from pyglet import image
 from pyglet.sprite import Sprite
 
 from constants import SQUARE_SIZE, CHESS_PIECE_SCALING
+from model.ChessBoardPosition import ChessBoardPosition
 
 
 class PygletKnightPiece:
@@ -21,6 +22,9 @@ class PygletKnightPiece:
         x = self._calculate_sprite_x()
         y = self._calculate_sprite_y()
         self.sprite.update(x, y)
+
+    def position(self) -> ChessBoardPosition:
+        return ChessBoardPosition(self.h_index, self.v_index)
 
     def _calculate_sprite_x(self):
         sprite_width = self.sprite.sprite.width

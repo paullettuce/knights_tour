@@ -23,6 +23,7 @@ class KnightsTour:
             on_tour_found(self.tour_steps_stack.as_list())
         else:
             on_tour_not_found()
+            self.tour_steps_stack.clear()
 
     def _add_first_node(self, x, y, stack):
         root = TourNode(x, y)

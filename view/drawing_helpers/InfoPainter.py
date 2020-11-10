@@ -16,7 +16,6 @@ class InfoPainter:
     def draw_current_info(self):
         if self._label:
             self._label.draw()
-
         if self._should_show_progress:
             self._progress_painter.show()
         else:

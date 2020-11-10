@@ -1,4 +1,5 @@
 
+# I'm leaving it for now
 class ProgressPainter:
     def __init__(self):
         self._progress_circle = None
