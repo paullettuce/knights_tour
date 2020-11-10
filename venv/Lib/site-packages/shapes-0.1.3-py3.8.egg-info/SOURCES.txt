@@ -1,0 +1,17 @@
+README.md
+setup.cfg
+setup.py
+shapes/Shape.py
+shapes/ShapeSet.py
+shapes/__init__.py
+shapes/input_output.py
+shapes/linear.py
+shapes/missing.py
+shapes/plotlm.py
+shapes/procrustes.py
+shapes.egg-info/PKG-INFO
+shapes.egg-info/SOURCES.txt
+shapes.egg-info/dependency_links.txt
+shapes.egg-info/not-zip-safe
+shapes.egg-info/requires.txt
+shapes.egg-info/top_level.txt
