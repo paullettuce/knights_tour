@@ -1,4 +1,5 @@
 from constants import VISITED_SQUARE_COLOR
+from model.ChessBoardPosition import ChessBoardPosition
 from view.BoardSquare import BoardSquare
 
 
@@ -18,8 +19,15 @@ class BoardPainter:
                 squares.append(BoardSquare(i, j))
         return squares
 
-    def mark_square_as_visited(self, position):
+    def visit_square(self, position: ChessBoardPosition):
+        square = self._find_square(position)
+        square.set_color(VISITED_SQUARE_COLOR)
+
+    def unvisit_square(self, position: ChessBoardPosition):
+        square = self._find_square(position)
+        square.reset_color()
+
+    def _find_square(self, position: ChessBoardPosition) -> BoardSquare:
         dummy_square = BoardSquare(position.h_index, position.v_index)
         i = self.board_squares.index(dummy_square)
-        drawn_square = self.board_squares[i]
-        drawn_square.set_color(VISITED_SQUARE_COLOR)
+        return self.board_squares[i]

@@ -33,3 +33,6 @@ class Stack:
 
     def reverse(self):
         self.items.reverse()
+
+    def is_full(self):
+        return self.size() == self.max_size

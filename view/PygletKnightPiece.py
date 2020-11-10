@@ -1,4 +1,5 @@
-from pyglet.sprite import Sprite, pyglet
+from pyglet import image
+from pyglet.sprite import Sprite
 
 from constants import SQUARE_SIZE
 
@@ -55,7 +56,7 @@ class PygletSprite:
         self.sprite.update(self.x, self.y)
 
     def _create_and_scale_sprite(self, resource_name, scaling_to_square_size):
-        knight_image = pyglet.image.load(resource_name)
+        knight_image = image.load(resource_name)
 
         sprite_scaling = self._calculate_scaling_for_sprite(knight_image.width, SQUARE_SIZE * scaling_to_square_size)
         sprite = Sprite(knight_image, self.x, self.y)

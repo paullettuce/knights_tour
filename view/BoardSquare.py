@@ -24,7 +24,10 @@ class BoardSquare:
     def set_color(self, color):
         self.color = color
         self.pyglet_rectangle.color = self.color
-        self.pyglet_rectangle.draw()
+
+    def reset_color(self):
+        self.color = self._pick_color()
+        self.pyglet_rectangle.color = self.color
 
     def _pick_color(self):
         if (self.horizontal_index + self.vertical_index) % 2 == 0:

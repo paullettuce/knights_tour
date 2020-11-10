@@ -18,6 +18,9 @@ class ShapesPainter:
         line = Line(start_pos.x, start_pos.y, end_pos.x, end_pos.y, width=LINE_WIDTH, color=LINE_COLOR)
         self._shapes.append(line)
 
+    def remove_last_line(self):
+        self._shapes.pop()
+
     def _calculate_center_of_square(self, position) -> AbsolutePosition:
         x = int(position.h_index * SQUARE_SIZE + SQUARE_SIZE / 2)
         y = int(position.v_index * SQUARE_SIZE + SQUARE_SIZE / 2)

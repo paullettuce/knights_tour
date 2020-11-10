@@ -9,7 +9,7 @@ from view.ChessBoardWindow import ChessBoardWindow
 
 
 def on_knight_locked(h_index, v_index):
-    knightsTour.start(h_index, v_index, window.add_route_info)
+    knightsTour.start(h_index, v_index, on_tour_found=window.add_route_info, on_tour_not_found=window.tour_not_found)
 
 
 board_width = 5

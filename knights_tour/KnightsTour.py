@@ -13,12 +13,16 @@ class KnightsTour:
         self.tries = 0
         self.start_time = time.time()
 
-    def start(self, x, y, on_tour_found):
+    def start(self, x, y, on_tour_found, on_tour_not_found):
         self._log_start(x, y)
         self._add_first_node(x, y, self.tour_steps_stack)
         self._depth_first_search(self.tour_steps_stack)
         self._print_result()
-        on_tour_found(self.tour_steps_stack.as_list())
+
+        if self.tour_steps_stack.is_full():
+            on_tour_found(self.tour_steps_stack.as_list())
+        else:
+            on_tour_not_found()
 
     def _add_first_node(self, x, y, stack):
         root = TourNode(x, y)

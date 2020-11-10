@@ -1,15 +1,18 @@
+from typing import Any
+
 import pyglet
 from pyglet import clock
-from pyglet.shapes import Line
+from pyglet.window import key
 
-from constants import *
 from model.ChessBoardPosition import ChessBoardPosition
-from view.BoardPainter import BoardPainter
-from view.ChessmanPainter import ChessmanPainter
-from view.ShapesPainter import ShapesPainter
+from view.KnightsControllerInterface import KnightsControllerInterface
+from view.drawing_helpers.BoardPainter import BoardPainter
+from view.drawing_helpers.ChessmanPainter import ChessmanPainter
+from view.drawing_helpers.KnightsTourDrawingHelper import KnightsTourDrawingHelper
+from view.drawing_helpers.ShapesPainter import ShapesPainter
 
 
-class ChessBoardWindow(pyglet.window.Window):
+class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
 
     def __init__(self, board, on_knight_locked, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,9 +22,7 @@ class ChessBoardWindow(pyglet.window.Window):
         self._chessman_painter = ChessmanPainter(on_knight_locked)
         self._board_painter = BoardPainter(board)
         self._shapes_painter = ShapesPainter()
-
-        self.additional_shapes = []
-        self.knight_tour = []
+        self._tour_drawing_helper = KnightsTourDrawingHelper(self)
 
     def on_draw(self):
         self.clear()
@@ -35,8 +36,7 @@ class ChessBoardWindow(pyglet.window.Window):
         if not self._chessman_painter.is_knight_locked():
             self.lock_knight(position)
         else:
-            clock.unschedule(self._draw_next_step)
-            clock.schedule_interval(self._draw_next_step, 1)
+            self._show_control_buttons()
 
     def on_mouse_enter(self, x, y):
         self._chessman_painter.create_floating_sprite(x, y)
@@ -47,22 +47,40 @@ class ChessBoardWindow(pyglet.window.Window):
     def on_mouse_motion(self, x, y, dx, dy):
         self._chessman_painter.update_floating_sprite(x, y)
 
-    def add_route_info(self, route):
-        for step in route:
-            self.knight_tour.append(step)
+    def on_key_press(self, symbol, modifiers):
+        if symbol is key.RIGHT:
+            self._tour_drawing_helper.manually_draw_next_step()
+            return
+        if symbol is key.LEFT:
+            self._tour_drawing_helper.undo_last_step()
+            return
+        if symbol is key.SPACE:
+            self._tour_drawing_helper.schedule_auto_drawing()
+            return
 
-    def _draw_next_step(self, _):
-        if self.knight_tour:
-            step = self.knight_tour.pop(0)
-            self.move_knight(ChessBoardPosition(step.x, step.y))
-
-    def lock_knight(self, position):
-        self._board_painter.mark_square_as_visited(position)
-        self._chessman_painter.lock_knight(position)
-
-    def move_knight(self, new_position):
-        self._board_painter.mark_square_as_visited(new_position)
+    def move_knight(self, new_position: ChessBoardPosition):
         old_position = self._chessman_painter.knight_position()
+        self._board_painter.visit_square(new_position)
         self._shapes_painter.add_line(old_position, new_position)
         self._chessman_painter.move_knight(new_position)
 
+    def move_knight_back(self, to_position: ChessBoardPosition):
+        old_position = self._chessman_painter.knight_position()
+        self._board_painter.unvisit_square(old_position)
+        self._shapes_painter.remove_last_line()
+        self._chessman_painter.move_knight(to_position)
+
+    def add_route_info(self, route):
+        self._tour_drawing_helper.add_route(route)
+
+    def tour_not_found(self):
+        # add label and reset
+        pass
+
+    def lock_knight(self, position: ChessBoardPosition):
+        self._board_painter.visit_square(position)
+        self._chessman_painter.lock_knight(position)
+
+    def _show_control_buttons(self):
+        # show info about control buttons
+        pass

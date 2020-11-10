@@ -1,3 +1,5 @@
+import abc
+
 from model.ChessBoardPosition import ChessBoardPosition
 from view.PygletKnightPiece import PygletSprite, PygletKnightPiece
 
