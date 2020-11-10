@@ -9,19 +9,21 @@ from view.KnightsControllerInterface import KnightsControllerInterface
 from view.drawing_helpers.BoardPainter import BoardPainter
 from view.drawing_helpers.ChessmanPainter import ChessmanPainter
 from view.drawing_helpers.KnightsTourDrawingHelper import KnightsTourDrawingHelper
+from view.drawing_helpers.InfoPainter import InfoPainter
 from view.drawing_helpers.ShapesPainter import ShapesPainter
 
 
 class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
 
-    def __init__(self, board, on_knight_locked, *args, **kwargs):
+    def __init__(self, board, start_finding_tour, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.on_knight_locked = on_knight_locked
+        self._start_finding_tour = start_finding_tour
 
-        self._chessman_painter = ChessmanPainter(on_knight_locked)
+        self._chessman_painter = ChessmanPainter(self._on_knight_locked)
         self._board_painter = BoardPainter(board)
         self._shapes_painter = ShapesPainter()
+        self._info_painter = InfoPainter()
         self._tour_drawing_helper = KnightsTourDrawingHelper(self)
 
     def on_draw(self):
@@ -29,14 +31,13 @@ class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
         self._board_painter.draw_board()
         self._chessman_painter.draw_all()
         self._shapes_painter.draw_all()
+        self._info_painter.draw_current_info()
 
     def on_mouse_press(self, x, y, button, modifiers):
         position = ChessBoardPosition.from_absolute_position(x, y)
 
         if not self._chessman_painter.is_knight_locked():
             self.lock_knight(position)
-        else:
-            self._show_control_buttons()
 
     def on_mouse_enter(self, x, y):
         self._chessman_painter.create_floating_sprite(x, y)
@@ -72,15 +73,19 @@ class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
 
     def add_route_info(self, route):
         self._tour_drawing_helper.add_route(route)
+        self._info_painter.show_tour_ready_info()
 
     def tour_not_found(self):
-        # add label and reset
-        pass
+        self._info_painter.show_tour_not_found_info()
+        self._reset()
 
     def lock_knight(self, position: ChessBoardPosition):
+        self._info_painter.show_finding_tour_info()
         self._board_painter.visit_square(position)
         self._chessman_painter.lock_knight(position)
 
-    def _show_control_buttons(self):
-        # show info about control buttons
-        pass
+    def _reset(self):
+        self._chessman_painter.unlock_knight()
+
+    def _on_knight_locked(self, h_index, v_index):
+        self._start_finding_tour(h_index, v_index)

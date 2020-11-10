@@ -1,7 +1,7 @@
 from pyglet import image
 from pyglet.sprite import Sprite
 
-from constants import SQUARE_SIZE
+from constants import SQUARE_SIZE, CHESS_PIECE_SCALING
 
 
 class PygletKnightPiece:
@@ -35,11 +35,11 @@ class PygletKnightPiece:
 
 
 class PygletSprite:
-    def __init__(self, x, y, scaling_to_square_size, resource_name='knight_w.png'):
+    def __init__(self, x, y, resource_name='knight_w.png'):
         self.x = x
         self.y = y
 
-        self.sprite = self._create_and_scale_sprite(resource_name, scaling_to_square_size)
+        self.sprite = self._create_and_scale_sprite(resource_name)
 
     def draw(self):
         self.sprite.draw()
@@ -51,10 +51,10 @@ class PygletSprite:
         self.y = self._calculate_center_of_square(y, image_height)
         self.sprite.update(self.x, self.y)
 
-    def _create_and_scale_sprite(self, resource_name, scaling_to_square_size):
+    def _create_and_scale_sprite(self, resource_name):
         knight_image = image.load(resource_name)
 
-        sprite_scaling = self._calculate_scaling_for_sprite(knight_image.width, SQUARE_SIZE * scaling_to_square_size)
+        sprite_scaling = self._calculate_scaling_for_sprite(knight_image.width, SQUARE_SIZE * CHESS_PIECE_SCALING)
         sprite = Sprite(knight_image, self.x, self.y)
         sprite.update(self.x, self.y, scale=sprite_scaling)
         sprite.anchor_x = sprite.width // 2
