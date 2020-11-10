@@ -3,10 +3,11 @@ from pyglet import clock
 from pyglet.shapes import Line
 
 from constants import *
-from view.BoardSquare import BoardSquare
-from view.ChessmanPainter import ChessmanPainter
-from view.PygletKnightPiece import PygletKnightPiece
+from model.ChessBoardPosition import ChessBoardPosition
 from view.BoardPainter import BoardPainter
+from view.ChessmanPainter import ChessmanPainter
+from view.ShapesPainter import ShapesPainter
+
 
 class ChessBoardWindow(pyglet.window.Window):
 
@@ -17,6 +18,7 @@ class ChessBoardWindow(pyglet.window.Window):
 
         self._chessman_painter = ChessmanPainter(on_knight_locked)
         self._board_painter = BoardPainter(board)
+        self._shapes_painter = ShapesPainter()
 
         self.additional_shapes = []
         self.knight_tour = []
@@ -25,16 +27,13 @@ class ChessBoardWindow(pyglet.window.Window):
         self.clear()
         self._board_painter.draw_board()
         self._chessman_painter.draw_all()
-
-        for shape in self.additional_shapes:
-            shape.draw_board()
+        self._shapes_painter.draw_all()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        h_index = int(x / SQUARE_SIZE)
-        v_index = int(y / SQUARE_SIZE)
+        position = ChessBoardPosition.from_absolute_position(x, y)
 
         if not self._chessman_painter.is_knight_locked():
-            self.lock_knight(h_index, v_index)
+            self.lock_knight(position)
         else:
             clock.unschedule(self._draw_next_step)
             clock.schedule_interval(self._draw_next_step, 1)
@@ -55,32 +54,15 @@ class ChessBoardWindow(pyglet.window.Window):
     def _draw_next_step(self, _):
         if self.knight_tour:
             step = self.knight_tour.pop(0)
-            self.move_knight(step.x, step.y)
+            self.move_knight(ChessBoardPosition(step.x, step.y))
 
-    def lock_knight(self, h_index, v_index):
-        self.mark_square_as_visited(h_index, v_index)
-        self._chessman_painter.lock_knight(h_index, v_index)
+    def lock_knight(self, position):
+        self._board_painter.mark_square_as_visited(position)
+        self._chessman_painter.lock_knight(position)
 
-    def move_knight(self, h_index, v_index):
-        self._board_painter.mark_square_as_visited(h_index, v_index)
+    def move_knight(self, new_position):
+        self._board_painter.mark_square_as_visited(new_position)
+        old_position = self._chessman_painter.knight_position()
+        self._shapes_painter.add_line(old_position, new_position)
+        self._chessman_painter.move_knight(new_position)
 
-        old_h_index = self.knight_piece.h_index
-        old_v_index = self.knight_piece.v_index
-        self.draw_line(old_h_index, old_v_index, h_index, v_index)
-
-        self._chessman_painter.move_knight(h_index, v_index)
-
-    def mark_square_as_visited(self, h_index, v_index):
-        self._board_painter.mark_square_as_visited(h_index, v_index)
-
-    def draw_line(self, from_h_index, from_v_index, to_h_index, to_v_index):
-        from_x = self._calculate_center_of_square_for_index(from_h_index)
-        from_y = self._calculate_center_of_square_for_index(from_v_index)
-        to_x = self._calculate_center_of_square_for_index(to_h_index)
-        to_y = self._calculate_center_of_square_for_index(to_v_index)
-        line = Line(from_x, from_y, to_x, to_y, width=LINE_WIDTH, color=LINE_COLOR)
-        self.additional_shapes.append(line)
-        line.draw()
-
-    def _calculate_center_of_square_for_index(self, axis_index):
-        return int(axis_index * SQUARE_SIZE + SQUARE_SIZE / 2)

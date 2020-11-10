@@ -1,3 +1,4 @@
+from model.ChessBoardPosition import ChessBoardPosition
 from view.PygletKnightPiece import PygletSprite, PygletKnightPiece
 
 
@@ -25,14 +26,17 @@ class ChessmanPainter:
     def is_knight_locked(self) -> bool:
         return self._knight
 
-    def lock_knight(self, h_index, v_index):
-        self._knight = PygletKnightPiece(h_index, v_index, self._floating_sprite)
+    def lock_knight(self, position):
+        self._knight = PygletKnightPiece(position.h_index, position.v_index, self._floating_sprite)
         self._knight.draw()
         self.delete_floating_sprite()
-        self._on_knight_locked(h_index, v_index)
+        self._on_knight_locked(position.h_index, position.v_index)
 
-    def move_knight(self, h_index, v_index):
-        self._knight.update(h_index, v_index)
+    def move_knight(self, position):
+        self._knight.update(position.h_index, position.v_index)
+
+    def knight_position(self):
+        return ChessBoardPosition(self._knight.h_index, self._knight.v_index)
 
     def _draw_knight(self):
         if self.is_knight_locked():

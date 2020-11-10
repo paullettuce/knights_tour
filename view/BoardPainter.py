@@ -18,8 +18,8 @@ class BoardPainter:
                 squares.append(BoardSquare(i, j))
         return squares
 
-    def mark_square_as_visited(self, h_index, v_index):
-        dummy_square = BoardSquare(h_index, v_index)
+    def mark_square_as_visited(self, position):
+        dummy_square = BoardSquare(position.h_index, position.v_index)
         i = self.board_squares.index(dummy_square)
         drawn_square = self.board_squares[i]
         drawn_square.set_color(VISITED_SQUARE_COLOR)
