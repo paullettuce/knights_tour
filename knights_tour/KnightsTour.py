@@ -1,7 +1,8 @@
 import logging
 import time
 
-from knights_tour.KnightsTourMoves import KnightsTourMoves, TourNode
+from knights_tour.KnightsTourMoves import KnightsTourMoves
+from model.ChessBoardPosition import ChessBoardPosition
 from model.stack import Stack
 
 
@@ -14,9 +15,9 @@ class KnightsTour:
         self.tries = 0
         self.start_time = time.time()
 
-    def start(self, x, y, on_tour_found, on_tour_not_found):
-        self._log_start(x, y)
-        self._add_first_node(x, y, self.tour_steps_stack)
+    def start(self, position: ChessBoardPosition, on_tour_found, on_tour_not_found):
+        self._log_start(position)
+        self._add_first_node(position, self.tour_steps_stack)
         self._depth_first_search(self.tour_steps_stack)
         self._print_result()
 
@@ -26,8 +27,8 @@ class KnightsTour:
             on_tour_not_found()
             self.tour_steps_stack.clear()
 
-    def _add_first_node(self, x, y, stack):
-        root = TourNode(x, y)
+    def _add_first_node(self, position, stack):
+        root = position
         stack.push(root)
 
     def _depth_first_search(self, stack):
@@ -35,7 +36,8 @@ class KnightsTour:
 
         # proceed
         top = stack.top()
-        moves = self.moves.find_available_moves(top.x, top.y, self.board.size_horizontal, self.board.size_vertical,
+        moves = self.moves.find_available_moves(top.h_index, top.v_index,
+                                                self.board.size_horizontal, self.board.size_vertical,
                                                 stack)
 
         # loop through possible move options from current node,
@@ -75,5 +77,8 @@ class KnightsTour:
         seconds_passed = time.time() - self.start_time
         return str(int(seconds_passed)) + " sec"
 
-    def _log_start(self, x, y):
-        logging.info("Finding Knight's Tour in progress, beginning at " + str(x) + "," + str(y))
+    def _log_start(self, position: ChessBoardPosition):
+        h_index = position.h_index
+        v_index = position.v_index
+        logging.info("Finding Knight's Tour in progress, beginning at " + str(h_index) + "," + str(v_index))
+

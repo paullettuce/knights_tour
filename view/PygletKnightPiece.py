@@ -6,33 +6,29 @@ from model.ChessBoardPosition import ChessBoardPosition
 
 
 class PygletKnightPiece:
-    def __init__(self, h_index, v_index, sprite):
-        self.piece_scaling = 0.9
-        self.h_index = h_index
-        self.v_index = v_index
-
-        self.sprite = sprite
+    def __init__(self, position: ChessBoardPosition, sprite):
+        self._position = position
+        self._sprite = sprite
 
     def draw(self):
-        self.sprite.draw()
+        self._sprite.draw()
 
-    def update(self, h_index, v_index):
-        self.h_index = h_index
-        self.v_index = v_index
+    def update(self, position):
+        self._position = position
         x = self._calculate_sprite_x()
         y = self._calculate_sprite_y()
-        self.sprite.update(x, y)
+        self._sprite.update(x, y)
 
     def position(self) -> ChessBoardPosition:
-        return ChessBoardPosition(self.h_index, self.v_index)
+        return self._position
 
     def _calculate_sprite_x(self):
-        sprite_width = self.sprite.sprite.width
-        return self._calculate_center(self.h_index, sprite_width)
+        sprite_width = self._sprite.sprite.width
+        return self._calculate_center(self._position.h_index, sprite_width)
 
     def _calculate_sprite_y(self):
-        sprite_height = self.sprite.sprite.height
-        return self._calculate_center(self.v_index, sprite_height)
+        sprite_height = self._sprite.sprite.height
+        return self._calculate_center(self._position.v_index, sprite_height)
 
     def _calculate_center(self, axis_index, image_size):
         return int(axis_index * SQUARE_SIZE + SQUARE_SIZE / 2 - image_size / 2)

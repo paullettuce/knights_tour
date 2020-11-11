@@ -1,5 +1,4 @@
 # main code
-import concurrent.futures
 import logging
 import threading
 
@@ -7,18 +6,23 @@ import pyglet
 
 from constants import SQUARE_SIZE, BOARD_HEIGHT, BOARD_WIDTH, LABEL_HEIGHT
 from knights_tour.KnightsTour import KnightsTour
+from model.ChessBoardPosition import ChessBoardPosition
 from model.board import *
 from view.ChessBoardWindow import ChessBoardWindow
 
+# NOTE FOR ME
+# before moving on with this project
+# - refactor KnightsTour class, think of faster way to find route
 
-def on_knight_locked(h_index, v_index):
-    x = threading.Thread(target=start_looking_for_tour, args=(h_index, v_index))
+
+def on_knight_locked(position: ChessBoardPosition):
+    x = threading.Thread(target=start_looking_for_tour, args=(position,))
     x.start()
 
 
-def start_looking_for_tour(h_index, v_index):
+def start_looking_for_tour(position: ChessBoardPosition):
     logging.info("main, start_looking_for_tour")
-    knightsTour.start(h_index, v_index, on_tour_found=window.add_route_info, on_tour_not_found=window.tour_not_found)
+    knightsTour.start(position, on_tour_found=window.add_route_info, on_tour_not_found=window.tour_not_found)
 
 
 format = "%(asctime)s: %(message)s"

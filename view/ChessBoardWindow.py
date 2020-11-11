@@ -19,7 +19,7 @@ class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
 
         self._start_finding_tour = start_finding_tour
 
-        self._chessman_painter = ChessmanPainter(self._on_knight_locked)
+        self._chessman_painter = ChessmanPainter()
         self._board_painter = BoardPainter(board)
         self._shapes_painter = ShapesPainter()
         self._info_painter = InfoPainter()
@@ -81,12 +81,13 @@ class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
     def lock_knight(self, position: ChessBoardPosition):
         self._board_painter.visit_square(position)
         self._chessman_painter.lock_knight(position)
+        self._on_knight_locked(position)
 
     def _reset(self):
         left_position = self._chessman_painter.unlock_knight()
         self._board_painter.unvisit_square(left_position)
 
-    def _on_knight_locked(self, h_index, v_index):
+    def _on_knight_locked(self, position: ChessBoardPosition):
         logging.info("ChessBoardWindow, on_knight_locked")
         self._info_painter.show_finding_tour_info()
-        self._start_finding_tour(h_index, v_index)
+        self._start_finding_tour(position)

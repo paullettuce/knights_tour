@@ -22,7 +22,7 @@ class KnightsTourDrawingHelper:
         self._unschedule_auto_drawing()
         step = self._previous_step()
         if step:
-            self._knights_controller.move_knight_back(ChessBoardPosition(step.x, step.y))
+            self._knights_controller.move_knight_back(step)
 
     def schedule_auto_drawing(self):
         self._unschedule_auto_drawing()
@@ -34,7 +34,7 @@ class KnightsTourDrawingHelper:
     def _draw_next_step(self, _):
         step = self._next_step()
         if step:
-            self._knights_controller.move_knight(ChessBoardPosition(step.x, step.y))
+            self._knights_controller.move_knight(step)
 
     def _next_step(self):
         new_index = self._current_index + 1

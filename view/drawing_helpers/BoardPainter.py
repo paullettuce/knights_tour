@@ -16,7 +16,8 @@ class BoardPainter:
         squares = []
         for i in range(size_horizontal):
             for j in range(size_vertical):
-                squares.append(BoardSquare(i, j))
+                position = ChessBoardPosition(i, j)
+                squares.append(BoardSquare(position))
         return squares
 
     def visit_square(self, position: ChessBoardPosition):
@@ -27,12 +28,12 @@ class BoardPainter:
         square = self._find_square(position)
         square.reset_color()
 
-    def mark_as_invalid(self, position):
+    def mark_as_invalid(self, position: ChessBoardPosition):
         square = self._find_square(position)
         square.set_color(INVALID_SQUARE_COLOR)
 
     def _find_square(self, position: ChessBoardPosition) -> BoardSquare:
-        dummy_square = BoardSquare(position.h_index, position.v_index)
+        dummy_square = BoardSquare(position)
         i = self.board_squares.index(dummy_square)
         return self.board_squares[i]
 
