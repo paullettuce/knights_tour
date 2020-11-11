@@ -1,15 +1,14 @@
-from typing import Any
+import logging
 
 import pyglet
-from pyglet import clock
 from pyglet.window import key
 
 from model.ChessBoardPosition import ChessBoardPosition
 from view.KnightsControllerInterface import KnightsControllerInterface
 from view.drawing_helpers.BoardPainter import BoardPainter
 from view.drawing_helpers.ChessmanPainter import ChessmanPainter
-from view.drawing_helpers.KnightsTourDrawingHelper import KnightsTourDrawingHelper
 from view.drawing_helpers.InfoPainter import InfoPainter
+from view.drawing_helpers.KnightsTourDrawingHelper import KnightsTourDrawingHelper
 from view.drawing_helpers.ShapesPainter import ShapesPainter
 
 
@@ -85,8 +84,9 @@ class ChessBoardWindow(pyglet.window.Window, KnightsControllerInterface):
 
     def _reset(self):
         left_position = self._chessman_painter.unlock_knight()
-        self._board_painter.mark_as_invalid(left_position)
+        self._board_painter.unvisit_square(left_position)
 
     def _on_knight_locked(self, h_index, v_index):
+        logging.info("ChessBoardWindow, on_knight_locked")
         self._info_painter.show_finding_tour_info()
         self._start_finding_tour(h_index, v_index)

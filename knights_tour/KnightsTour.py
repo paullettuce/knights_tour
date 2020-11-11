@@ -1,3 +1,4 @@
+import logging
 import time
 
 from knights_tour.KnightsTourMoves import KnightsTourMoves, TourNode
@@ -66,13 +67,13 @@ class KnightsTour:
             self._print_result()
 
     def _print_tries(self):
-        print("Try no " + str(self.tries) +
-              ", time passed: " + self._solving_time() +
-              ". Stack size is " + str(self.tour_steps_stack.size()))
+        logging.info("Try no " + str(self.tries) +
+                     ", time passed: " + self._solving_time() +
+                     ". Stack size is " + str(self.tour_steps_stack.size()))
 
     def _solving_time(self) -> str:
         seconds_passed = time.time() - self.start_time
         return str(int(seconds_passed)) + " sec"
 
     def _log_start(self, x, y):
-        print("Finding Knight's Tour in progress, beginning at " + str(x) + "," + str(y))
+        logging.info("Finding Knight's Tour in progress, beginning at " + str(x) + "," + str(y))
